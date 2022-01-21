@@ -41,8 +41,26 @@ class PermuteStateTest extends AnyFlatSpec with ChiselScalatestTester{
             c.io.state.poke("hBE5466CF34E90C6C".U)
             c.io.inverse.poke(false.B)
             c.clock.step()
-           // c.clock.step()
             c.io.permuted_state.expect("hb9ccee0f6643c645".U)
+
+            c.io.state.poke("hBE5466CF34E90C6C".U)
+            c.io.inverse.poke(true.B)
+            c.clock.step()
+            c.io.permuted_state.expect("hb6cec35f966ec440".U)
+            //println("Last Output value :" + c.io.cipher.peek().litValue)
+            
+        }
+    }
+}
+
+class TweakLFSR extends AnyFlatSpec with ChiselScalatestTester{
+    behavior of "TweakLFSR"
+    it should "Do an LFSR operation on an input tweak" in {
+        test(new qarma64.TweakLFSR){c =>
+            c.io.tweak.poke("hBE5466CF34E90C6C".U)
+            c.clock.step()
+            c.clock.step()
+            c.io.lfsr.expect("h5f52b6cf14ec066c".U)
             //println("Last Output value :" + c.io.cipher.peek().litValue)
             
         }
