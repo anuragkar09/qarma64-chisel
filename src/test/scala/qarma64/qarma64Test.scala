@@ -53,7 +53,7 @@ class PermuteStateTest extends AnyFlatSpec with ChiselScalatestTester{
     }
 }
 
-class TweakLFSR extends AnyFlatSpec with ChiselScalatestTester{
+class TweakLFSRTest extends AnyFlatSpec with ChiselScalatestTester{
     behavior of "TweakLFSR"
     it should "Do an LFSR operation on an input tweak" in {
         test(new qarma64.TweakLFSR){c =>
@@ -61,6 +61,43 @@ class TweakLFSR extends AnyFlatSpec with ChiselScalatestTester{
             c.clock.step()
             c.clock.step()
             c.io.lfsr.expect("h5f52b6cf14ec066c".U)
+            //println("Last Output value :" + c.io.cipher.peek().litValue)
+            
+        }
+    }
+}
+
+/*class CalcTweakTest extends AnyFlatSpec with ChiselScalatestTester{
+    behavior of "CalcTweak"
+    it should "Do r rounds of permute and LFSR" in {
+        test(new CalcTweak(5)){c =>
+            c.io.tweak.poke("hBE5466CF34E90C6C".U)
+            //c.io.r.poke(5.U)
+            c.clock.step()
+            c.clock.step()
+            c.clock.step()
+            c.clock.step()
+            c.clock.step()
+            //c.clock.step()
+            c.io.tweak_r.expect("h6a0a772dab3a691e".U)
+            //println("Last Output value :" + c.io.cipher.peek().litValue)
+            
+        }
+    }
+}*/
+
+class MixColumnsTest extends AnyFlatSpec with ChiselScalatestTester{
+    behavior of "MixColumns Module"
+    it should "Mix each column in a set manner" in {
+        test(new qarma64.MixColumns){c =>
+            c.io.state.poke("hbe5466cf34e90c6c".U)
+            
+            for (i <- 0 until 4) // 4 clock cycles
+            {
+               c.clock.step()
+            }
+            
+            c.io.mixed_state.expect("h04e016e82e078c44".U)
             //println("Last Output value :" + c.io.cipher.peek().litValue)
             
         }
