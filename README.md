@@ -1,4 +1,4 @@
-Chisel Project Template
+QARMA64 Block Cipher with 5 rounds in Chisel
 =======================
 
 [Chisel Bootcamp](https://github.com/freechipsproject/chisel-bootcamp)
