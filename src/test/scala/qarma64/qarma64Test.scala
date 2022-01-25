@@ -150,7 +150,8 @@ class Qarma64Test extends AnyFlatSpec with ChiselScalatestTester{
             c.io.tweak.poke("h477d469dec0b8762".U)
             c.io.w0.poke("h84be85ce9804e94b".U)
             c.io.k0.poke("hec2802d4e0a488e9".U)
-            for (i <- 0 until 2) 
+            c.io.encryption.poke(true.B)
+            for (i <- 0 until 20) 
             {
                c.clock.step()
             }
