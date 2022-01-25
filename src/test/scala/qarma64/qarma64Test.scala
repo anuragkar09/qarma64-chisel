@@ -151,11 +151,81 @@ class Qarma64Test extends AnyFlatSpec with ChiselScalatestTester{
             c.io.w0.poke("h84be85ce9804e94b".U)
             c.io.k0.poke("hec2802d4e0a488e9".U)
             c.io.encryption.poke(true.B)
-            for (i <- 0 until 20) 
+            for (i <- 0 until 17) 
             {
                c.clock.step()
             }
             c.io.ciphertext.expect("h3ee99a6c82af0c38".U)
+        }
+    }
+}
+
+
+class CalcTweakTest_0Rounds extends AnyFlatSpec with ChiselScalatestTester{
+    behavior of "CalcTweak_rounds0"
+    it should "Do r rounds of permute and LFSR" in {
+        test(new CalcTweak_5rounds()){c =>
+            c.io.tweak.poke("hBE5466CF34E90C6C".U)
+            //c.io.r.poke(5.U)
+            for (i <- 0 until 1) // 4 clock cycles
+            {
+               c.clock.step()
+            }
+            //c.clock.step()
+            c.io.tweak_r.expect("h6a0a772dab3a691e".U)
+            //println("Last Output value :" + c.io.cipher.peek().litValue)
+            
+        }
+    }
+}
+
+class CalcRoundTweakeyTest_5rounds extends AnyFlatSpec with ChiselScalatestTester{
+    behavior of "CalcRoundTweakey"
+    it should "Use CalcTweak and do some xor stuff" in {
+        test(new CalcRoundTweakey_0rounds()){c =>
+            /*c.io.tweak.poke("hBE5466CF34E90C6C".U)
+            c.io.k0.poke("h527c641bd44d8485".U)
+            c.io.backwards.poke(false.B)
+
+            for (i <- 0 until 1) 
+            {
+               c.clock.step()
+            }
+            c.io.output.expect("hec2802d4e0a488e9".U)*/
+
+            c.io.tweak.poke("hBE5466CF34E90C6C".U)
+            c.io.k0.poke("h527c641bd44d8485".U)
+            c.io.backwards.poke(true.B)
+            for (i <- 0 until 1) 
+            {
+               c.clock.step()
+            }
+            c.io.output.expect("h2c842b6329d8d834".U)
+        }
+    }
+}
+
+class RoundTest extends AnyFlatSpec with ChiselScalatestTester{
+    behavior of "Round"
+    it should "Do the round operation" in {
+        test(new Round_0rounds()){c =>
+            c.io.state.poke("hBE5466CF34E90C6C".U)
+            c.io.tweakey.poke("h527c641bd44d8485".U)
+            c.io.backwards.poke(false.B)
+            for (i <- 0 until 2) 
+            {
+               c.clock.step()
+            }
+            c.io.round_state.expect("h1d2602c910396614".U) 
+
+        c.io.state.poke("hBE5466CF34E90C6C".U)
+            c.io.tweakey.poke("h527c641bd44d8485".U)
+            c.io.backwards.poke(true.B)
+            for (i <- 0 until 2) 
+            {
+               c.clock.step()
+            }
+            c.io.round_state.expect("h2385ecce7d598908".U)
         }
     }
 }
